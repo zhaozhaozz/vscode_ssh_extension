@@ -1,0 +1,127 @@
+{
+	"name": "ssh-here",
+	"displayName": "SSH-Here",
+	"description": "Find shell scripts in folder.",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.46.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:workbench.action.tasks.runTask",
+		"onCommand:ssh-here.configSshkey",
+		"onCommand:ssh-here.openSshTerminal",
+		"onCommand:ssh-here.openSshTerminalFolder",
+		"onCommand:ssh-here.runSshTerminalScript"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"menus": {
+			"explorer/context": [{
+					"when": "explorerResourceIsFolder",
+					"command": "ssh-here.openSshTerminalFolder",
+					"group": "z_commands"
+				}, {
+					"when": "resourceExtname == .sh",
+					"command": "ssh-here.runSshTerminalScript",
+					"group": "z_commands"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "ssh-here.configSshkey",
+				"title": "SSH Here: Configure ssh key-based authentication."
+			}, {
+				"command": "ssh-here.openSshTerminal",
+				"title": "SSH Here: Open SSH terminal."
+			}, {
+				"command": "ssh-here.openSshTerminalFolder",
+				"title": "SSH Here: Open SSH terminal in folder."
+			}, {
+				"command": "ssh-here.runSshTerminalScript",
+				"title": "SSH Here: Run script in SSH terminal."
+			}
+		],
+		"configuration": {
+			"title": "SshHere",
+			"properties": {
+					"sshHere.keyLocation": {
+					"type": "string",
+					"format": "uri",
+					"default": ".ssh/id_rsa",
+					"description": "The ssh key path. Absolute path or relative path to your HOME."
+				},
+					"sshHere.userName": {
+					"type": "string",
+					"default": "",
+					"description": "Your server username."
+				},
+					"sshHere.serverAddress": {
+					"type": "string",
+					"default": "127.0.0.1",
+					"description": "Your server address."
+				},
+					"sshHere.port": {
+					"type": "number",
+					"default": 22,
+					"description": "Your server ssh port."
+				},
+					"sshHere.remotePath": {
+					"type": "string",
+					"format": "uri",
+					"default": "/home/username",
+					"description": "Your server mounted path."
+				},
+					"sshHere.localPath": {
+					"type": "string",
+					"format": "uri",
+					"default": "z:",
+					"description": "Your local mounted path."
+				}
+			}
+		},
+		"taskDefinitions": [
+			{
+				"type": "ssh",
+				"required": [
+					"file"
+				],
+				"properties": {
+					"file": {
+						"type": "string",
+						"format": "uri",
+						"description": "The script to run."
+					},
+					"args": {
+						"type": "string",
+						"description": "Additional arguments."
+					}
+				}
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint src --ext ts",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.46.0",
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^7.0.2",
+		"@types/node": "^13.11.0",
+		"eslint": "^6.8.0",
+		"@typescript-eslint/parser": "^2.30.0",
+		"@typescript-eslint/eslint-plugin": "^2.30.0",
+		"glob": "^7.1.6",
+		"mocha": "^7.1.2",
+		"typescript": "^3.8.3",
+		"vscode-test": "^1.3.0"
+	}
+}
